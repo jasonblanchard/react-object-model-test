@@ -4,7 +4,7 @@ import { normalize, arrayOf } from 'normalizr';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
 
-import { loadModels } from 'app/state/actions';
+import { fetchModels, receiveModels } from 'app/state/models/actions';
 import api from 'app/api';
 import schema from 'app/state/models/schema';
 
@@ -19,7 +19,7 @@ class Course {
 
   static entityReducer(state = {}, action) {
     switch (action.type) {
-      case 'LOAD_MODELS':
+      case 'RECIEVE_MODELS':
         return merge({}, action.payload.entities.Course, state);
       default:
         return state;
@@ -27,7 +27,11 @@ class Course {
   }
 
   static loadingReducer(state = false, action) {
-    switch (action) {
+    switch (action.type) {
+      case 'RECIEVE_MODELS':
+        return false;
+      case 'FETCH_MODELS':
+        return true;
       default:
         return state;
     }
@@ -35,6 +39,7 @@ class Course {
 
   static fetch(id = null) {
     return function (dispatch) {
+      dispatch(fetchModels());
       api.get('Course', id).then(response => {
         let normedResponse = null;
         if (Array.isArray(response)) {
@@ -42,13 +47,13 @@ class Course {
         } else {
           normedResponse = normalize(response, schema.Course);
         }
-        dispatch(loadModels(normedResponse));
+        dispatch(receiveModels(normedResponse));
       });
     };
   }
 
   static get(state = {}, id) {
-    const modelSelector = state.models.Course.entities; // TODO: Centralize this somehow.
+    const modelSelector = state.models.Course.entities; // TODO: Centralize this state moint point somehow.
     const entities = Object.keys(state.models).reduce((memo, modelKey) => {
       const tmp = memo;
       tmp[modelKey] = state.models[modelKey].entities;
@@ -60,6 +65,9 @@ class Course {
     return denormalize(modelSelector, entities, schema.Course);
   }
 
+  static isLoading(state = {}) {
+    return state.models.Course.loading; // TODO: Centralize this state moint point somehow.
+  }
 }
 
 Course.modelName = 'Course';

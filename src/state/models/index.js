@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
-import Course from './course';
-import Topic from './topic';
-import Lesson from './lesson';
+import Course from './Course';
+import Topic from './Topic';
+import Lesson from './Lesson';
 
 const models = {
   [Course.modelName]: Course,

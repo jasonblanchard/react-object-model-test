@@ -11,7 +11,7 @@ class Lesson {
 
   static entityReducer(state = {}, action) {
     switch (action.type) {
-      case 'LOAD_MODELS':
+      case 'RECIEVE_MODELS':
         return merge({}, action.payload.entities.Lesson, state);
       default:
         return state;

@@ -7,7 +7,7 @@ import models from 'app/state/models';
 
 class CoursesPageHandler extends Component {
   render() {
-    return <CoursesPage courses={this.props.courses} />;
+    return this.props.isLoading ? <div>Loading...</div> : <CoursesPage courses={this.props.courses} />;
   }
 
   componentDidMount() {
@@ -18,11 +18,13 @@ class CoursesPageHandler extends Component {
 CoursesPageHandler.propTypes = {
   courses: PropTypes.object,
   fetchCourse: PropTypes.func,
+  isLoading: PropTypes.bool,
 };
 
 function mapStateToProps(state) {
   return {
     courses: models.Course.get(state),
+    isLoading: models.Course.isLoading(state),
   };
 }
 
