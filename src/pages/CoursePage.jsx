@@ -13,7 +13,7 @@ class CoursePage extends Component {
       <div>
         <h2>Course: {this.props.course.name}</h2>
         {this.props.course.topics.map(this.renderTopic)}
-        <Link to="courses">&lt;&lt; back to courses</Link>
+        <Link to="/courses">&lt;&lt; back to courses</Link>
       </div>
     );
   }
