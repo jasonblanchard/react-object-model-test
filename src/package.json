@@ -3,5 +3,5 @@
     "version": "0.0.1",
     "description": "Base app",
     "private": true,
-    "main": "client/index.js"
+    "main": "index.js"
 }

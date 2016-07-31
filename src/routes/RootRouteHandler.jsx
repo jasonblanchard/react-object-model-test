@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 
 const RootPageHandler = (props) => (
   <div>
-    <h1>Root</h1>
+    <h1>React Object Model Test</h1>
     {props.children}
   </div>
 );

@@ -10,30 +10,26 @@ class CoursePage extends Component {
   render() {
     return (
       <div>
-        <h2>Course</h2>
-        {this.props.course.name}
-        <h3>Topics</h3>
-        <ul>
-          {this.props.course.topics.map(this.renderTopic)}
-        </ul>
+        <h2>Course: {this.props.course.name}</h2>
+        {this.props.course.topics.map(this.renderTopic)}
       </div>
     );
   }
 
   renderTopic(topic) {
     return (
-      <li key={topic.id}>
-        {topic.name}
+      <div key={topic.id}>
+        <h3>Topic: {topic.name}</h3>
         <ul>
           {topic.lessons.map(this.renderLessonPreview)}
         </ul>
-      </li>
+      </div>
     );
   }
 
   renderLessonPreview(lesson) {
     return (
-      <li key={lesson.id}>{lesson.name}</li>
+      <li key={lesson.id}>Lesson: {lesson.name}</li>
     );
   }
 }
