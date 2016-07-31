@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import React, { Component, PropTypes } from 'react';
 
-class CoursePage extends Component {
+class CourseEditPage extends Component {
   constructor(props) {
     super(props);
 
@@ -11,12 +11,15 @@ class CoursePage extends Component {
   render() {
     return (
       <div>
-        <h2>Course: {this.props.course.name}</h2>
-        <Link to={`/courses/${this.props.course.id}/edit`}>Edit</Link>
-        {this.props.course.topics.map(this.renderTopic)}
-        <div>
-          <Link to="/courses">&lt;&lt; back to courses</Link>
-        </div>
+        <h2>Edit Course: {this.props.course.name}</h2>
+        <form>
+          <label>
+            Name:
+            <input type="text" />
+          </label>
+          <input type="submit" value="save" />
+        </form>
+        <Link to={`/courses/${this.props.course.id}`}>&lt;&lt; back to {this.props.course.name}</Link>
       </div>
     );
   }
@@ -39,8 +42,8 @@ class CoursePage extends Component {
   }
 }
 
-CoursePage.propTypes = {
+CourseEditPage.propTypes = {
   course: PropTypes.object,
 };
 
-export default CoursePage;
+export default CourseEditPage;
