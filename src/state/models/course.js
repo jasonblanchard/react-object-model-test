@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { handleActions } from 'redux-actions';
 import { denormalize } from 'denormalizr';
 import { normalize, arrayOf } from 'normalizr';
 import get from 'lodash.get';
@@ -12,29 +13,22 @@ import schema from 'app/state/models/schema';
 class Course {
   static reducer() {
     return combineReducers({
-      entities: Course.entityReducer,
-      loading: Course.loadingReducer,
+      entities: Course.entitiesReducer(),
+      loading: Course.loadingReducer(),
     });
   }
 
-  static entityReducer(state = {}, action) {
-    switch (action.type) {
-      case 'RECIEVE_MODELS':
-        return merge({}, action.payload.entities.Course, state);
-      default:
-        return state;
-    }
+  static entitiesReducer() {
+    return handleActions({
+      [receiveModels]: (state, action) => merge({}, action.payload.entities.Course, state),
+    }, {});
   }
 
-  static loadingReducer(state = false, action) {
-    switch (action.type) {
-      case 'RECIEVE_MODELS':
-        return false;
-      case 'FETCH_MODELS':
-        return true;
-      default:
-        return state;
-    }
+  static loadingReducer() {
+    return handleActions({
+      [receiveModels]: () => false,
+      [fetchModels]: () => true,
+    }, false);
   }
 
   static fetch(id = null) {

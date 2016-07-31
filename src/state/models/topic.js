@@ -4,12 +4,12 @@ import merge from 'lodash.merge';
 class Topic {
   static reducer() {
     return combineReducers({
-      entities: Topic.entityReducer,
+      entities: Topic.entitiesReducer,
       loading: Topic.loadingReducer,
     });
   }
 
-  static entityReducer(state = {}, action) {
+  static entitiesReducer(state = {}, action) {
     switch (action.type) {
       case 'RECIEVE_MODELS':
         return merge({}, action.payload.entities.Topic, state);

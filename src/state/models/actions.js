@@ -1,12 +1,4 @@
-export function fetchModels() {
-  return {
-    type: 'FETCH_MODELS',
-  };
-}
+import { createAction } from 'redux-actions';
 
-export function receiveModels(entities) {
-  return {
-    type: 'RECIEVE_MODELS',
-    payload: entities,
-  };
-}
+export const fetchModels = createAction('FETCH_MODELS');
+export const receiveModels = createAction('RECIEVE_MODELS');
