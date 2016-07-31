@@ -1,0 +1,9 @@
+{
+  "extends": "airbnb",
+  "rules": {
+    "max-len": 0,
+    "func-names": 0,
+    "import/no-unresolved": 0,
+    "react/sort-comp": 0,
+  }
+}
