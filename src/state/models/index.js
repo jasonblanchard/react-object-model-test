@@ -9,16 +9,10 @@ export const models = {
   [Lesson.modelName]: Lesson,
 };
 
-export const reducer = combineReducers({
-  [Course.modelName]: Course.reducer(),
-  [Topic.modelName]: Topic.reducer(),
-  [Lesson.modelName]: Lesson.reducer(),
-});
+const reducers = Object.keys(models).reduce((memo, modelKey) => {
+  const tmp = memo;
+  tmp[modelKey] = models[modelKey].reducer();
+  return tmp;
+}, {});
 
-export const modelNames = {
-  [Course.modelName]: Course.modelName,
-  [Topic.modelName]: Topic.modelName,
-  [Lesson.modelName]: Lesson.modelName,
-};
-
-export default reducer;
+export default combineReducers(reducers);
