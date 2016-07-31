@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 
 import CourseEditPage from 'app/pages/CourseEditPage';
-import models from 'app/state/models';
+import { models } from 'app/state/models';
 
 class CourseEditPageHandler extends Component {
   render() {

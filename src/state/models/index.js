@@ -3,13 +3,13 @@ import Course from './Course';
 import Topic from './Topic';
 import Lesson from './Lesson';
 
-const models = {
+export const models = {
   [Course.modelName]: Course,
   [Topic.modelName]: Topic,
   [Lesson.modelName]: Lesson,
 };
 
-export const modelReducer = combineReducers({
+export const reducer = combineReducers({
   [Course.modelName]: Course.reducer(),
   [Topic.modelName]: Topic.reducer(),
   [Lesson.modelName]: Lesson.reducer(),
@@ -21,4 +21,4 @@ export const modelNames = {
   [Lesson.modelName]: Lesson.modelName,
 };
 
-export default models;
+export default reducer;

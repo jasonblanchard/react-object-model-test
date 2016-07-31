@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 
 import CoursesPage from 'app/pages/CoursesPage';
-import models from 'app/state/models';
+import { models } from 'app/state/models';
 
 class CoursesPageHandler extends Component {
   render() {
