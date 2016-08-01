@@ -17,7 +17,8 @@ const Course = {
   reducer() {
     return combineReducers({
       entities: this.entitiesReducer(),
-      loading: this.loadingReducer(),
+      isLoading: this.isLoadingReducer(),
+      isUpdating: this.isUpdatingReducer(),
     });
   },
 
@@ -28,11 +29,17 @@ const Course = {
     }, {});
   },
 
-  loadingReducer() {
+  isLoadingReducer() {
     return handleActions({
       [receiveEntities]: () => false,
-      [updateCourse]: () => true,
       [fetchEntities]: (state, action) => action.payload === this.modelName,
+    }, false);
+  },
+
+  isUpdatingReducer() {
+    return handleActions({
+      [updateCourse]: () => true,
+      [receiveEntities]: () => false,
     }, false);
   },
 
@@ -81,6 +88,10 @@ const Course = {
 
   isLoading(state = {}) {
     return state.models.Course.loading; // TODO: Centralize this state moint point somehow.
+  },
+
+  isUpdating(state = {}) {
+    return state.models.Course.isUpdating; // TODO: Centralize this state moint point somehow.
   },
 };
 

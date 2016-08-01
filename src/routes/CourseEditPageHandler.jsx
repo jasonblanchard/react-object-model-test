@@ -31,7 +31,7 @@ CourseEditPageHandler.propTypes = {
 
 const mapStateToProps = (state, ownProps) => ({
   course: models.Course.get(state, ownProps.params.courseId),
-  isUpdating: models.Course.isLoading(state),
+  isUpdating: models.Course.isUpdating(state),
 });
 
 function mapDispatchToProps(dispatch) {
