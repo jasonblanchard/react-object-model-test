@@ -5,7 +5,7 @@ import { normalize, arrayOf } from 'normalizr';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
 
-import { fetchModels, receiveModels } from 'app/state/models/actions';
+import { fetchEntities, receiveEntities } from 'app/state/models/actions';
 import api from 'app/api';
 import schema from 'app/state/models/schema';
 
@@ -22,20 +22,20 @@ const Course = {
   entitiesReducer() {
     return handleActions({
       // TODO: This is identical across model utility classes. Possibly centralize.
-      [receiveModels]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
+      [receiveEntities]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
     }, {});
   },
 
   loadingReducer() {
     return handleActions({
-      [receiveModels]: () => false,
-      [fetchModels]: (state, action) => action.payload === this.modelName,
+      [receiveEntities]: () => false,
+      [fetchEntities]: (state, action) => action.payload === this.modelName,
     }, false);
   },
 
   fetch(id = null) {
     return (dispatch) => {
-      dispatch(fetchModels(this.modelName));
+      dispatch(fetchEntities(this.modelName));
       api.get('Course', id).then(response => {
         let normedResponse = null;
         if (Array.isArray(response)) {
@@ -43,7 +43,7 @@ const Course = {
         } else {
           normedResponse = normalize(response, schema.Course);
         }
-        dispatch(receiveModels(normedResponse));
+        dispatch(receiveEntities(normedResponse));
       });
     };
   },

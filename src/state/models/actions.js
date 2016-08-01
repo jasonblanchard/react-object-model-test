@@ -1,4 +1,4 @@
 import { createAction } from 'redux-actions';
 
-export const fetchModels = createAction('FETCH_MODELS');
-export const receiveModels = createAction('RECIEVE_MODELS');
+export const fetchEntities = createAction('FETCH_ENTIIES');
+export const receiveEntities = createAction('RECIEVE_ENTITIES');

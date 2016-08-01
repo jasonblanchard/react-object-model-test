@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import merge from 'lodash.merge';
 
-import { receiveModels } from 'app/state/models/actions';
+import { receiveEntities } from 'app/state/models/actions';
 
 const Topic = {
   modelName: 'Topic',
@@ -16,7 +16,7 @@ const Topic = {
 
   entitiesReducer() {
     return handleActions({
-      [receiveModels]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
+      [receiveEntities]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
     }, {});
   },
 
