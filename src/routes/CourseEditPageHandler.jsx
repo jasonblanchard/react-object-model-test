@@ -30,14 +30,14 @@ CourseEditPageHandler.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  course: models.Course.get(state, ownProps.params.courseId),
-  isUpdating: models.Course.isUpdating(state),
+  course: models.Course.selectors.get(state, ownProps.params.courseId),
+  isUpdating: models.Course.selectors.isUpdating(state),
 });
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchCourse: models.Course.fetch.bind(models.Course),
-    updateCourse: models.Course.update,
+    fetchCourse: models.Course.actions.fetch,
+    updateCourse: models.Course.actions.update,
   }, dispatch);
 }
 

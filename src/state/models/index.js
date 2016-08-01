@@ -9,10 +9,8 @@ export const models = {
   [Lesson.modelName]: Lesson,
 };
 
-const reducers = Object.keys(models).reduce((memo, modelKey) => {
-  const tmp = memo;
-  tmp[modelKey] = models[modelKey].reducer();
-  return tmp;
-}, {});
+const reducers = Object.keys(models).reduce((memo, modelKey) => (
+  Object.assign({}, { [modelKey]: models[modelKey].reducer() }, memo)
+), {});
 
 export default combineReducers(reducers);

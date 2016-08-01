@@ -9,19 +9,9 @@ import { fetchEntities, receiveEntities } from 'app/state/models/actions';
 import api from 'app/api';
 import schema from 'app/state/models/schema';
 
-const updateCourse = createAction('UPDATE_COURSE');
+const modelName = 'Course';
 
-const Course = {
-  modelName: 'Course',
-
-  reducer() {
-    return combineReducers({
-      entities: this.entitiesReducer(),
-      isLoading: this.isLoadingReducer(),
-      isUpdating: this.isUpdatingReducer(),
-    });
-  },
-
+const reducers = {
   entitiesReducer() {
     return handleActions({
       // TODO: This is identical across model utility classes. Possibly centralize.
@@ -38,16 +28,18 @@ const Course = {
 
   isUpdatingReducer() {
     return handleActions({
-      [updateCourse]: () => true,
+      [this.actions.updateCourse]: () => true,
       [receiveEntities]: () => false,
     }, false);
   },
+};
 
+const actions = {
   fetchAll() {
     return (dispatch) => {
-      dispatch(fetchEntities(this.modelName));
-      api.get('Course').then(response => {
-        const normedResponse = normalize(response, arrayOf(schema.Course));
+      dispatch(fetchEntities(modelName));
+      api.get(modelName).then(response => {
+        const normedResponse = normalize(response, arrayOf(schema[modelName]));
         dispatch(receiveEntities(normedResponse));
       });
     };
@@ -55,44 +47,68 @@ const Course = {
 
   fetch(id = null) {
     return (dispatch) => {
-      dispatch(fetchEntities(this.modelName));
-      api.get('Course', id).then(response => {
-        const normedResponse = normalize(response, schema.Course);
+      dispatch(fetchEntities(modelName));
+      api.get(modelName, id).then(response => {
+        const normedResponse = normalize(response, schema[modelName]);
         dispatch(receiveEntities(normedResponse));
       });
     };
   },
+
+  requestUpdate: createAction('REQUEST_UPDATE_COURSE'),
 
   update(id, params) {
     return dispatch => {
-      dispatch(updateCourse());
+      dispatch(actions.requestUpdate());
       api.update('Course', id, params).then(response => {
-        const normedResponse = normalize(response, schema.Course);
+        const normedResponse = normalize(response, schema[modelName]);
         dispatch(receiveEntities(normedResponse));
       });
     };
   },
+};
 
-  get(state = {}, id) {
-    const modelSelector = state.models.Course.entities; // TODO: Centralize this state moint point somehow.
-    const entities = Object.keys(state.models).reduce((memo, modelKey) => {
+const selectors = {
+  entities(state = {}) {
+    return Object.keys(state.models).reduce((memo, modelKey) => {
       const tmp = memo;
       tmp[modelKey] = state.models[modelKey].entities;
       return tmp;
     }, {}); // TODO: YUCK. Denormalize does not like this entity shape.
-    if (id) {
-      return denormalize(get(modelSelector, id), entities, schema.Course);
-    }
+  },
+
+  getAll(state = {}) {
+    const modelSelector = state.models.Course.entities; // TODO: Centralize this state moint point somehow.
+    const entities = this.entities(state);
     return denormalize(modelSelector, entities, schema.Course);
   },
 
+  get(state = {}, id) {
+    const modelSelector = state.models.Course.entities; // TODO: Centralize this state moint point somehow.
+    const entities = this.entities(state);
+    return denormalize(get(modelSelector, id), entities, schema.Course);
+  },
+
   isLoading(state = {}) {
-    return state.models.Course.loading; // TODO: Centralize this state moint point somehow.
+    return state.models.Course.isLoading; // TODO: Centralize this state moint point somehow.
   },
 
   isUpdating(state = {}) {
     return state.models.Course.isUpdating; // TODO: Centralize this state moint point somehow.
   },
+};
+
+const Course = {
+  modelName,
+  reducer() {
+    return combineReducers({
+      entities: reducers.entitiesReducer.bind(this)(),
+      isLoading: reducers.isLoadingReducer.bind(this)(),
+      isUpdating: reducers.isUpdatingReducer.bind(this)(),
+    });
+  },
+  actions,
+  selectors,
 };
 
 export default Course;

@@ -23,14 +23,14 @@ CoursesPageHandler.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    courses: models.Course.get(state),
-    isLoading: models.Course.isLoading(state),
+    courses: models.Course.selectors.getAll(state),
+    isLoading: models.Course.selectors.isLoading(state),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchCourses: models.Course.fetchAll.bind(models.Course),
+    fetchCourses: models.Course.actions.fetchAll,
   }, dispatch);
 }
 

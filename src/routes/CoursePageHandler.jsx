@@ -28,12 +28,12 @@ CoursePageHandler.propTypes = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  course: models.Course.get(state, ownProps.params.courseId),
+  course: models.Course.selectors.get(state, ownProps.params.courseId),
 });
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchCourse: models.Course.fetch.bind(models.Course),
+    fetchCourse: models.Course.actions.fetch,
   }, dispatch);
 }
 
