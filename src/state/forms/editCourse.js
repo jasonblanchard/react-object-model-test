@@ -21,6 +21,10 @@ const editCourse = {
   reducer,
   actions,
   selectors,
+  createUpdateWithDefaults: (dispatch, defaults = {}) => {
+    dispatch(actions.update(defaults));
+    return actions.update;
+  },
 };
 
 export default editCourse;
