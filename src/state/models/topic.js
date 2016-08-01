@@ -1,33 +1,28 @@
 import { combineReducers } from 'redux';
+import { handleActions } from 'redux-actions';
 import merge from 'lodash.merge';
 
-class Topic {
-  static reducer() {
+import { receiveModels } from 'app/state/models/actions';
+
+const Topic = {
+  modelName: 'Topic',
+
+  reducer() {
     return combineReducers({
-      entities: Topic.entitiesReducer,
-      loading: Topic.loadingReducer,
+      entities: this.entitiesReducer(),
+      loading: this.loadingReducer(),
     });
-  }
+  },
 
-  static entitiesReducer(state = {}, action) {
-    switch (action.type) {
-      case 'RECIEVE_MODELS':
-        return merge({}, action.payload.entities.Topic, state);
-      default:
-        return state;
-    }
-  }
+  entitiesReducer() {
+    return handleActions({
+      [receiveModels]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
+    }, {});
+  },
 
-  static loadingReducer(state = false, action) {
-    switch (action) {
-      default:
-        return state;
-    }
-  }
-
-}
-
-Topic.modelName = 'Topic';
-Topic.schema = {};
+  loadingReducer() {
+    return false;
+  },
+};
 
 export default Topic;

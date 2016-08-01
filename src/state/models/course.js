@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import { handleActions } from 'redux-actions';
 import { denormalize } from 'denormalizr';
+import { handleActions } from 'redux-actions';
 import { normalize, arrayOf } from 'normalizr';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
@@ -9,31 +9,33 @@ import { fetchModels, receiveModels } from 'app/state/models/actions';
 import api from 'app/api';
 import schema from 'app/state/models/schema';
 
-// TODO: Does this need to be a class at all? Plain object? Individual exports?
-class Course {
-  static reducer() {
+const Course = {
+  modelName: 'Course',
+
+  reducer() {
     return combineReducers({
-      entities: Course.entitiesReducer(),
-      loading: Course.loadingReducer(),
+      entities: this.entitiesReducer(),
+      loading: this.loadingReducer(),
     });
-  }
+  },
 
-  static entitiesReducer() {
+  entitiesReducer() {
     return handleActions({
-      [receiveModels]: (state, action) => merge({}, action.payload.entities.Course, state),
+      // TODO: This is identical across model utility classes. Possibly centralize.
+      [receiveModels]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
     }, {});
-  }
+  },
 
-  static loadingReducer() {
+  loadingReducer() {
     return handleActions({
       [receiveModels]: () => false,
-      [fetchModels]: () => true,
+      [fetchModels]: (state, action) => action.payload === this.modelName,
     }, false);
-  }
+  },
 
-  static fetch(id = null) {
-    return function (dispatch) {
-      dispatch(fetchModels());
+  fetch(id = null) {
+    return (dispatch) => {
+      dispatch(fetchModels(this.modelName));
       api.get('Course', id).then(response => {
         let normedResponse = null;
         if (Array.isArray(response)) {
@@ -44,9 +46,9 @@ class Course {
         dispatch(receiveModels(normedResponse));
       });
     };
-  }
+  },
 
-  static get(state = {}, id) {
+  get(state = {}, id) {
     const modelSelector = state.models.Course.entities; // TODO: Centralize this state moint point somehow.
     const entities = Object.keys(state.models).reduce((memo, modelKey) => {
       const tmp = memo;
@@ -57,14 +59,11 @@ class Course {
       return denormalize(get(modelSelector, id), entities, schema.Course);
     }
     return denormalize(modelSelector, entities, schema.Course);
-  }
+  },
 
-  static isLoading(state = {}) {
+  isLoading(state = {}) {
     return state.models.Course.loading; // TODO: Centralize this state moint point somehow.
-  }
-}
-
-Course.modelName = 'Course';
-Course.schema = {};
+  },
+};
 
 export default Course;

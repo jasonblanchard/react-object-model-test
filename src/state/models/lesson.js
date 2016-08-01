@@ -1,33 +1,28 @@
 import { combineReducers } from 'redux';
+import { handleActions } from 'redux-actions';
 import merge from 'lodash.merge';
 
-class Lesson {
-  static reducer() {
+import { receiveModels } from 'app/state/models/actions';
+
+const Lesson = {
+  modelName: 'Lesson',
+
+  reducer() {
     return combineReducers({
-      entities: Lesson.entitiesReducer,
-      loading: Lesson.loadingReducer,
+      entities: Lesson.entitiesReducer(),
+      loading: Lesson.loadingReducer(),
     });
-  }
+  },
 
-  static entitiesReducer(state = {}, action) {
-    switch (action.type) {
-      case 'RECIEVE_MODELS':
-        return merge({}, action.payload.entities.Lesson, state);
-      default:
-        return state;
-    }
-  }
+  entitiesReducer() {
+    return handleActions({
+      [receiveModels]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
+    }, {});
+  },
 
-  static loadingReducer(state = false, action) {
-    switch (action) {
-      default:
-        return state;
-    }
-  }
-
-}
-
-Lesson.modelName = 'Lesson';
-Lesson.schema = {};
+  loadingReducer() {
+    return false;
+  },
+};
 
 export default Lesson;

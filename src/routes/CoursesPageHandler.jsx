@@ -30,7 +30,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchCourse: models.Course.fetch,
+    fetchCourse: models.Course.fetch.bind(models.Course),
   }, dispatch);
 }
 
