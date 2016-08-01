@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { denormalize } from 'denormalizr';
-import { handleActions } from 'redux-actions';
+import { handleActions, createAction } from 'redux-actions';
 import { normalize, arrayOf } from 'normalizr';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
@@ -8,6 +8,8 @@ import merge from 'lodash.merge';
 import { fetchEntities, receiveEntities } from 'app/state/models/actions';
 import api from 'app/api';
 import schema from 'app/state/models/schema';
+
+const updateCourse = createAction('UPDATE_COURSE');
 
 const Course = {
   modelName: 'Course',
@@ -22,13 +24,14 @@ const Course = {
   entitiesReducer() {
     return handleActions({
       // TODO: This is identical across model utility classes. Possibly centralize.
-      [receiveEntities]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
+      [receiveEntities]: (state, action) => merge({}, state, action.payload.entities[this.modelName]),
     }, {});
   },
 
   loadingReducer() {
     return handleActions({
       [receiveEntities]: () => false,
+      [updateCourse]: () => true,
       [fetchEntities]: (state, action) => action.payload === this.modelName,
     }, false);
   },
@@ -47,6 +50,16 @@ const Course = {
     return (dispatch) => {
       dispatch(fetchEntities(this.modelName));
       api.get('Course', id).then(response => {
+        const normedResponse = normalize(response, schema.Course);
+        dispatch(receiveEntities(normedResponse));
+      });
+    };
+  },
+
+  update(id, params) {
+    return dispatch => {
+      dispatch(updateCourse());
+      api.update('Course', id, params).then(response => {
         const normedResponse = normalize(response, schema.Course);
         dispatch(receiveEntities(normedResponse));
       });

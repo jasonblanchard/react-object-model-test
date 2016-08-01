@@ -16,7 +16,7 @@ const Lesson = {
 
   entitiesReducer() {
     return handleActions({
-      [receiveEntities]: (state, action) => merge({}, action.payload.entities[this.modelName], state),
+      [receiveEntities]: (state, action) => merge({}, state, action.payload.entities[this.modelName]),
     }, {});
   },
 
