@@ -5,39 +5,18 @@ import { normalize, arrayOf } from 'normalizr';
 import get from 'lodash.get';
 import merge from 'lodash.merge';
 
-import { fetchEntities, receiveEntities } from 'app/state/models/actions';
+import { receiveEntities } from 'app/state/models/actions';
 import api from 'app/api';
 import schema from 'app/state/models/schema';
 
 const modelName = 'Course';
 
-const reducers = {
-  entitiesReducer() {
-    return handleActions({
-      // TODO: This is identical across model utility classes. Possibly centralize.
-      [receiveEntities]: (state, action) => merge({}, state, action.payload.entities[this.modelName]),
-    }, {});
-  },
-
-  isLoadingReducer() {
-    return handleActions({
-      [receiveEntities]: () => false,
-      [fetchEntities]: (state, action) => action.payload === this.modelName,
-    }, false);
-  },
-
-  isUpdatingReducer() {
-    return handleActions({
-      [this.actions.updateCourse]: () => true,
-      [receiveEntities]: () => false,
-    }, false);
-  },
-};
-
 const actions = {
+  request: createAction('MODELS/COURSE/REQUEST'),
+
   fetchAll() {
     return (dispatch) => {
-      dispatch(fetchEntities(modelName));
+      dispatch(actions.request(modelName));
       api.get(modelName).then(response => {
         const normedResponse = normalize(response, arrayOf(schema[modelName]));
         dispatch(receiveEntities(normedResponse));
@@ -47,7 +26,7 @@ const actions = {
 
   fetch(id = null) {
     return (dispatch) => {
-      dispatch(fetchEntities(modelName));
+      dispatch(actions.request(modelName));
       api.get(modelName, id).then(response => {
         const normedResponse = normalize(response, schema[modelName]);
         dispatch(receiveEntities(normedResponse));
@@ -55,7 +34,7 @@ const actions = {
     };
   },
 
-  requestUpdate: createAction('REQUEST_UPDATE_COURSE'),
+  requestUpdate: createAction('MODELS/COURSE/REQUEST_UPDATE'),
 
   update(id, params) {
     return dispatch => {
@@ -68,6 +47,24 @@ const actions = {
   },
 };
 
+const reducers = {
+  entities: handleActions({
+    // TODO: This is identical across model utility classes. Possibly centralize.
+    [receiveEntities]: (state, action) => merge({}, state, action.payload.entities[modelName]),
+  }, {}),
+
+  isLoading: handleActions({
+    [receiveEntities]: () => false,
+    [actions.request]: (state, action) => action.payload === modelName,
+  }, false),
+
+  isUpdating: handleActions({
+    [actions.requestUpdate]: () => true,
+    [receiveEntities]: () => false,
+  }, false),
+};
+
+// TODO: Use reselect to make these memoized.
 const selectors = {
   entities(state = {}) {
     return Object.keys(state.models).reduce((memo, modelKey) => {
@@ -100,14 +97,8 @@ const selectors = {
 
 const Course = {
   modelName,
-  reducer() {
-    return combineReducers({
-      entities: reducers.entitiesReducer.bind(this)(),
-      isLoading: reducers.isLoadingReducer.bind(this)(),
-      isUpdating: reducers.isUpdatingReducer.bind(this)(),
-    });
-  },
   actions,
+  reducer: combineReducers(reducers),
   selectors,
 };
 

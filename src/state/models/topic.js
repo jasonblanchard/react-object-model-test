@@ -4,25 +4,20 @@ import merge from 'lodash.merge';
 
 import { receiveEntities } from 'app/state/models/actions';
 
+const modelName = 'Topic';
+
+const reducers = {
+  entities: handleActions({
+    [receiveEntities]: (state, action) => merge({}, state, action.payload.entities[modelName]),
+  }, {}),
+
+  loading: () => false,
+};
+
 const Topic = {
-  modelName: 'Topic',
+  modelName,
+  reducer: combineReducers(reducers),
 
-  reducer() {
-    return combineReducers({
-      entities: this.entitiesReducer(),
-      loading: this.loadingReducer(),
-    });
-  },
-
-  entitiesReducer() {
-    return handleActions({
-      [receiveEntities]: (state, action) => merge({}, state, action.payload.entities[this.modelName]),
-    }, {});
-  },
-
-  loadingReducer() {
-    return false;
-  },
 };
 
 export default Topic;
