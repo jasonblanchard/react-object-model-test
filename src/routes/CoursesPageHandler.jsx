@@ -11,13 +11,13 @@ class CoursesPageHandler extends Component {
   }
 
   componentDidMount() {
-    this.props.fetchCourse();
+    this.props.fetchCourses();
   }
 }
 
 CoursesPageHandler.propTypes = {
   courses: PropTypes.object,
-  fetchCourse: PropTypes.func,
+  fetchCourses: PropTypes.func,
   isLoading: PropTypes.bool,
 };
 
@@ -30,7 +30,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchCourse: models.Course.fetch.bind(models.Course),
+    fetchCourses: models.Course.fetchAll.bind(models.Course),
   }, dispatch);
 }
 

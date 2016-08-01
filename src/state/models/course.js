@@ -33,16 +33,21 @@ const Course = {
     }, false);
   },
 
+  fetchAll() {
+    return (dispatch) => {
+      dispatch(fetchEntities(this.modelName));
+      api.get('Course').then(response => {
+        const normedResponse = normalize(response, arrayOf(schema.Course));
+        dispatch(receiveEntities(normedResponse));
+      });
+    };
+  },
+
   fetch(id = null) {
     return (dispatch) => {
       dispatch(fetchEntities(this.modelName));
       api.get('Course', id).then(response => {
-        let normedResponse = null;
-        if (Array.isArray(response)) {
-          normedResponse = normalize(response, arrayOf(schema.Course));
-        } else {
-          normedResponse = normalize(response, schema.Course);
-        }
+        const normedResponse = normalize(response, schema.Course);
         dispatch(receiveEntities(normedResponse));
       });
     };
