@@ -5,10 +5,6 @@ class CourseEditPage extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { // TODO: Replace this internal state with global state.
-      name: props.course.name,
-    };
-
     this.renderTopic = this.renderTopic.bind(this);
     this.renderLessonPreview = this.renderLessonPreview.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -21,7 +17,7 @@ class CourseEditPage extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>
             Name:
-            <input type="text" value={this.state.name} id="name" onChange={this.handleChange} />
+            <input type="text" value={this.props.formFields.name} id="name" onChange={this.handleChange} />
           </label>
           <input type="submit" value="save" />
         </form>
@@ -51,20 +47,20 @@ class CourseEditPage extends Component {
   }
 
   handleChange(event) {
-    this.setState({
-      name: event.target.value,
-    });
+    this.props.onChange({ name: event.target.value });
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.onSubmit(this.props.course.id, { name: this.state.name });
+    this.props.onSubmit(this.props.course.id, this.props.formFields);
   }
 }
 
 CourseEditPage.propTypes = {
   course: PropTypes.object,
+  formFields: PropTypes.object,
   isUpdating: PropTypes.bool,
+  onChange: PropTypes.func,
   onSubmit: PropTypes.func,
 };
 

@@ -4,11 +4,12 @@ import React, { Component, PropTypes } from 'react';
 
 import CourseEditPage from 'app/pages/CourseEditPage';
 import { models } from 'app/state/models';
+import { forms } from 'app/state/forms';
 
 class CourseEditPageHandler extends Component {
   render() {
     if (this.props.course) {
-      return <CourseEditPage course={this.props.course} onSubmit={this.props.updateCourse} isUpdating={this.props.isUpdating} />;
+      return <CourseEditPage formFields={this.props.editCourseFormFields} course={this.props.course} onChange={this.props.updateEditCourseForm} onSubmit={this.props.updateCourse} isUpdating={this.props.isUpdating} />;
     }
     return <div>loading...</div>;
   }
@@ -25,12 +26,15 @@ CourseEditPageHandler.propTypes = {
   params: PropTypes.shape({
     courseId: PropTypes.string,
   }),
+  editCourseFormFields: PropTypes.object,
   topics: PropTypes.array,
   updateCourse: PropTypes.func,
+  updateEditCourseForm: PropTypes.func,
 };
 
 const mapStateToProps = (state, ownProps) => ({
   course: models.Course.selectors.get(state, ownProps.params.courseId),
+  editCourseFormFields: forms.editCourse.selectors.fields(state),
   isUpdating: models.Course.selectors.isUpdating(state),
 });
 
@@ -38,6 +42,7 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchCourse: models.Course.actions.fetch,
     updateCourse: models.Course.actions.update,
+    updateEditCourseForm: forms.editCourse.actions.update,
   }, dispatch);
 }
 
