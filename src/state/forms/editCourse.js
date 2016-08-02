@@ -2,13 +2,16 @@ import { createAction, handleActions } from 'redux-actions';
 
 const formName = 'editCourse';
 
+const fields = { name: '' };
+
 const actions = {
   update: createAction('FORMS/EDIT_COURSE/UPDATE'),
 };
 
 const reducer = handleActions({
+  '@@router/LOCATION_CHANGE': () => fields,
   [actions.update]: (state, action) => Object.assign({}, state, action.payload),
-}, { name: '' });
+}, fields);
 
 const selectors = {
   fields(state = {}) {
@@ -21,10 +24,6 @@ const editCourse = {
   reducer,
   actions,
   selectors,
-  createUpdateWithDefaults: (dispatch, defaults = {}) => {
-    dispatch(actions.update(defaults));
-    return actions.update;
-  },
 };
 
 export default editCourse;
