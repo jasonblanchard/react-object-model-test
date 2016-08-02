@@ -9,7 +9,7 @@ const actions = {
 };
 
 const reducer = handleActions({
-  '@@router/LOCATION_CHANGE': () => fields,
+  '@@router/LOCATION_CHANGE': () => fields, // TODO: Does react-router-redux expose this as a constant?
   [actions.update]: (state, action) => Object.assign({}, state, action.payload),
 }, fields);
 

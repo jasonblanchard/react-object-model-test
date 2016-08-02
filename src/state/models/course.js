@@ -27,7 +27,7 @@ const actions = {
   fetch(id = null) {
     return (dispatch) => {
       dispatch(actions.request(modelName));
-      api.get(modelName, id).then(response => {
+      return api.get(modelName, id).then(response => {
         const normedResponse = normalize(response, schema[modelName]);
         dispatch(receiveEntities(normedResponse));
       });

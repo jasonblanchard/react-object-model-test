@@ -46,9 +46,4 @@ function mapDispatchToProps(dispatch) {
   }, dispatch);
 }
 
-function mergeProps(stateProps, dispatchProps, ownProps) {
-  // const updateEditCourseForm = forms.editCourse.createUpdateWithDefaults(dispatchProps.dispatch, stateProps.course);
-  return Object.assign({}, stateProps, dispatchProps, ownProps);
-}
-
 export default connect(mapStateToProps, mapDispatchToProps)(CourseEditPageHandler);
